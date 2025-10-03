@@ -4,6 +4,8 @@ from models import User
 from sqlalchemy.orm import sessionmaker
 from db import engine
 from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
+from fastapi.responses import FileResponse
 
 session_local = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
@@ -21,6 +23,12 @@ class STUDENT(BaseModel):
     name: str
     age: int
     grade: str
+
+@app.get("/", include_in_schema=False)
+def serve_index():
+    file_path = Path(__file__).parent / "index.html"
+    return FileResponse(file_path)
+
 
 @app.get("/students/")
 def get_students():
